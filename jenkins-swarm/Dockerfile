@@ -1,4 +1,4 @@
-FROM java:openjdk-8u131-jre
+FROM openjdk:8u131-jre
 
 ENV JENKINS_HOME=/var/jenkins_home
 ENV JENKINS_SWARM_VERSION=3.4
