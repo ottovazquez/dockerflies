@@ -2,30 +2,25 @@
 
 JAR=`ls -1 ${JENKINS_HOME}/swarm-client-*.jar | tail -n 1`
 
-SWARM_OPTS="-fsroot ${JENKINS_HOME}"
-
-if [ ! -z "$JENKINS_USERNAME" ]; then
-  SWARM_OPTS="${SWARM_OPTS} -username $JENKINS_USERNAME"
-fi
-if [ ! -z "$JENKINS_PASSWORD" ]; then
-  SWARM_OPTS="${SWARM_OPTS} -password $JENKINS_PASSWORD"
-fi
-if [ ! -z "$JENKINS_SLAVE_EXECUTORS" ]; then
-  SWARM_OPTS="${SWARM_OPTS} -executors $SLAVE_EXECUTORS"
-fi
-if [ ! -z "$JENKINS_SLAVE_LABELS" ]; then
-  SWARM_OPTS="${SWARM_OPTS} -labels $SLAVE_LABELS"
-fi
-if [ ! -z "$JENKINS_SLAVE_NAME" ]; then
-  SWARM_OPTS="${SWARM_OPTS} -name $SLAVE_NAME"
-fi
-if [ ! -z "$JENKINS_MASTER" ]; then
-  SWARM_OPTS="${SWARM_OPTS} -master $JENKINS_MASTER"
-else
-  if [ ! -z "$JENKINS_SERVICE_PORT" ]; then
-    # kubernetes environment variable
-    SWARM_OPTS="${SWARM_OPTS} -master http://$SERVICE_HOST:$JENKINS_SERVICE_PORT"
-  fi
+if [ -z "$JENKINS_MASTER_URL" ]; then
+  echo "JENKINS_MASTER_URL is not set, exit now"
+  exit 1
 fi
 
-java -jar ${JAR} ${SWARM_OPTS} ${JENKINS_SWARM_EXTRA}
+JENKINS_SWARM_OPTS="-fsroot ${JENKINS_HOME} -master ${JENKINS_MASTER_URL}"
+
+if [ -n "$JENKINS_USERNAME" ]; then
+  JENKINS_SWARM_OPTS="${JENKINS_SWARM_OPTS} -username $JENKINS_USERNAME"
+fi
+if [ -n "$JENKINS_PASSWORD" ]; then
+  JENKINS_SWARM_OPTS="${JENKINS_SWARM_OPTS} -password $JENKINS_PASSWORD"
+fi
+if [ -n "$JENKINS_SWARM_EXECUTORS" ]; then
+  JENKINS_SWARM_OPTS="${JENKINS_SWARM_OPTS} -executors $JENKINS_SWARM_EXECUTORS"
+fi
+
+if [ "${JENKINS_SWARM_SSL_VERIFICATION}" == "false" ]; then
+  JENKINS_SWARM_OPTS="${JENKINS_SWARM_OPTS} -disableSslVerification"
+fi
+
+java -jar ${JAR} ${JENKINS_SWARM_OPTS} ${JENKINS_SWARM_EXTRA}

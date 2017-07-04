@@ -1,7 +1,4 @@
-FROM java:openjdk-8u111-jre
-
-# https://github.com/jenkinsci/docker/blob/38a7f8a3700d6637a6f08ff563beaef9926ce5ee/Dockerfile
-LABEL maintainer "Otto Vazquez <otto.vazquez@gmail.com>"
+FROM java:openjdk-8u131-jre
 
 ENV JENKINS_HOME=/var/jenkins_home
 ENV JENKINS_SWARM_VERSION=3.4
