@@ -1,6 +1,5 @@
-# jenkins-slaves
-Jenkin swarm slaves with docker installed and accessible to docker slave.
-
+# Jenkins Swarm
+Run Jenkins [Swarm slaves](https://wiki.jenkins.io/display/JENKINS/Swarm+Plugin)
 
 ## Running
 
@@ -9,20 +8,20 @@ To run a Docker container customizing the different tools with your credentials
     docker run \
     -e JENKINS_USERNAME=jenkins \
     -e JENKINS_PASSWORD=jenkins \
-    -e JENKINS_MASTER=http://jenkins:8080 \
-    jenkins-slave
+    -e JENKINS_MASTER_URL=http://jenkins:8080 \
+    ottovazquez:jenkins-swarm
 
 
-### Optional Environment Variables
+### Environment Variables
 
-You can specify optional environment variables below when invoking docker run to customize the behavior of the swarm client.
-
-| Parameter               | Default Value       | Description                                                                |
-|-------------------------|---------------------|----------------------------------------------------------------------------|
-| JENKINS_SLAVE_EXECUTORS | number of cpu cores | This value specifies the number of concurrent jobs this worker can process |
-| JENKINS_SLAVE_NAME      | swarm-client        | This value specifies the name of slave that will appear on Jenkins UI      |
-| JENKINS_SLAVE_LABELS    |                     | This value specifies the labels you want to give for the launching slave   |
-| JENKINS_SWARM_EXTRA     |                     | Extra properties to be added                                               |
+| Variable                | Default Value       | Description                                  |
+|-------------------------|---------------------|----------------------------------------------|
+| JENKINS_MASTER_URL      |                     | Jenkins master URL                           |
+| JENKINS_USERNAME        |                     | Username to connect to Jenkins master        |
+| JENKINS_PASSWORD        |                     | Password to connect to Jenkins master        |
+| JENKINS_SWARM_EXECUTORS | # CPU               | # of concurrent jobs this worker can process |
+| JENKINS_SWARM_SSL_VERIFICATION | true         | Verify SSL connection in the HttpClient      |
+| JENKINS_SWARM_EXTRA     |                     | Extra properties to be added                 |
 
 
 The full list of parameters can be found at [Swarm Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Swarm+Plugin) page.
