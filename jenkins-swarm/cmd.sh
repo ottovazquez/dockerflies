@@ -7,23 +7,6 @@ if [ -z "$JENKINS_SWARM_MASTER_URL" ]; then
   exit 1
 fi
 
-if [ -n "${JENKISN_SWARM_KNOWN_HOSTS}" ]; then
-    SSH_DIR=$HOME/.ssh
-
-    if [ ! -d ${SSH_DIR} ]; then
-        mkdir ${SSH_DIR}
-    fi
-    if [ -f ${SSH_DIR}/known_hosts ]; then
-        rm ${SSH_DIR}/known_hosts
-    fi
-
-    touch ${SSH_DIR}/known_hosts
-    for i in $(echo ${JENKISN_SWARM_KNOWN_HOSTS} | tr ',' ' '); do
-        ssh-keyscan -H $i >> ${SSH_DIR}/known_hosts
-    done
-    chmod 600 ${SSH_DIR}/known_hosts
-fi
-
 JENKINS_SWARM_OPTS="-fsroot ${JENKINS_SWARM_HOME} -master ${JENKINS_SWARM_MASTER_URL}"
 
 if [ -n "$JENKINS_SWARM_USERNAME" ]; then

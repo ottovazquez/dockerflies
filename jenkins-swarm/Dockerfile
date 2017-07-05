@@ -2,7 +2,6 @@ FROM openjdk:8u131-jre
 
 ENV JENKINS_SWARM_HOME=/var/jenkins_home
 ENV JENKINS_SWARM_VERSION=3.4
-ENV RANCHER_VERSION=0.6.2
 ENV DOCKER_VERSION=17.05.0-ce
 ENV DOCKER_COMPOSE_VERSION=1.14.0
 
@@ -26,11 +25,6 @@ RUN BIN_DIR=/usr/local/bin &&\
     JENKINS_SWARM_URL="https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/${JENKINS_SWARM_VERSION}/${JENKINS_SWARM_FILE}" &&\
     curl --create-dirs -fsSLo ${JENKINS_SWARM_HOME}/${JENKINS_SWARM_FILE} "${JENKINS_SWARM_URL}" &&\
     chown -R ${user} ${JENKINS_SWARM_HOME} &&\
-
-    # Rancher CLI
-    RANCHER_URL="https://github.com/rancher/cli/releases/download/v${RANCHER_VERSION}/rancher-linux-amd64-v${RANCHER_VERSION}.tar.gz" &&\
-    curl --location-trusted -fsSL ${RANCHER_URL} | tar --strip-components=2 -xz -C ${BIN_DIR} &&\
-    chmod +x ${BIN_DIR}/rancher &&\
 
     # Docker
     DOCKER_URL="https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" &&\
