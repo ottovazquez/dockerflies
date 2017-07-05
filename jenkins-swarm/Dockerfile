@@ -13,9 +13,6 @@ ARG gid=1000
 COPY cmd.sh /cmd.sh
 
 RUN BIN_DIR=/usr/local/bin &&\
-    apt-get update &&\
-    apt-get install -y openssh-client &&\
-    apt-get clean &&\
     groupadd -g ${gid} ${group} &&\
     useradd -d "${JENKINS_SWARM_HOME}" -u ${uid} -g ${gid} -m -s /bin/bash ${user} &&\
     chmod +x /cmd.sh &&\
