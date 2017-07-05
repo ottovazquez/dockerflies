@@ -1,6 +1,6 @@
 FROM openjdk:8u131-jre
 
-ENV JENKINS_HOME=/var/jenkins_home
+ENV JENKINS_SWARM_HOME=/var/jenkins_home
 ENV JENKINS_SWARM_VERSION=3.4
 ENV RANCHER_VERSION=0.6.2
 ENV DOCKER_VERSION=17.05.0-ce
@@ -13,35 +13,36 @@ ARG gid=1000
 
 COPY cmd.sh /cmd.sh
 
-RUN \
-  groupadd -g ${gid} ${group} &&\
-  useradd -d "${JENKINS_HOME}" -u ${uid} -g ${gid} -m -s /bin/bash ${user} &&\
-  chmod +x /cmd.sh &&\
+RUN BIN_DIR=/usr/local/bin &&\
+    apt-get update &&\
+    apt-get install -y openssh-client &&\
+    apt-get clean &&\
+    groupadd -g ${gid} ${group} &&\
+    useradd -d "${JENKINS_SWARM_HOME}" -u ${uid} -g ${gid} -m -s /bin/bash ${user} &&\
+    chmod +x /cmd.sh &&\
 
-  BIN_DIR=/usr/local/bin &&\
+    # Jenkins Swarm
+    JENKINS_SWARM_FILE="swarm-client-${JENKINS_SWARM_VERSION}.jar" &&\
+    JENKINS_SWARM_URL="https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/${JENKINS_SWARM_VERSION}/${JENKINS_SWARM_FILE}" &&\
+    curl --create-dirs -fsSLo ${JENKINS_SWARM_HOME}/${JENKINS_SWARM_FILE} "${JENKINS_SWARM_URL}" &&\
+    chown -R ${user} ${JENKINS_SWARM_HOME} &&\
 
-  # Jenkins Swarm
-  JENKINS_SWARM_FILE="swarm-client-${JENKINS_SWARM_VERSION}.jar" &&\
-  JENKINS_SWARM_URL="https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/${JENKINS_SWARM_VERSION}/${JENKINS_SWARM_FILE}" &&\
-  curl --create-dirs -fsSLo ${JENKINS_HOME}/${JENKINS_SWARM_FILE} "${JENKINS_SWARM_URL}" &&\
-  chown -R ${user} ${JENKINS_HOME} &&\
+    # Rancher CLI
+    RANCHER_URL="https://github.com/rancher/cli/releases/download/v${RANCHER_VERSION}/rancher-linux-amd64-v${RANCHER_VERSION}.tar.gz" &&\
+    curl --location-trusted -fsSL ${RANCHER_URL} | tar --strip-components=2 -xz -C ${BIN_DIR} &&\
+    chmod +x ${BIN_DIR}/rancher &&\
 
-  # Rancher CLI
-  RANCHER_URL="https://github.com/rancher/cli/releases/download/v${RANCHER_VERSION}/rancher-linux-amd64-v${RANCHER_VERSION}.tar.gz" &&\
-  curl --location-trusted -fsSL ${RANCHER_URL} | tar --strip-components=2 -xz -C ${BIN_DIR} &&\
-  chmod +x ${BIN_DIR}/rancher &&\
+    # Docker
+    DOCKER_URL="https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" &&\
+    curl -fsSL ${DOCKER_URL} | tar --strip-components=1 -xz -C ${BIN_DIR} &&\
 
-  # Docker
-  DOCKER_URL="https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" &&\
-  curl -fsSL ${DOCKER_URL} | tar --strip-components=1 -xz -C ${BIN_DIR} &&\
-
-  # Docker Compose
-  DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-Linux-x86_64" &&\
-  curl -fsSLo ${BIN_DIR}/docker-compose ${DOCKER_COMPOSE_URL} &&\
-  chmod +x ${BIN_DIR}/docker-compose
+    # Docker Compose
+    DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-Linux-x86_64" &&\
+    curl -fsSLo ${BIN_DIR}/docker-compose ${DOCKER_COMPOSE_URL} &&\
+    chmod +x ${BIN_DIR}/docker-compose
 
 USER ${user}
-WORKDIR ${JENKINS_HOME}
+WORKDIR ${JENKINS_SWARM_HOME}
 
 VOLUME /var/run/docker.sock
 
