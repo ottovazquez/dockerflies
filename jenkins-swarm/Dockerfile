@@ -2,8 +2,8 @@ FROM openjdk:8u131-jre
 
 ENV JENKINS_SWARM_HOME=/var/jenkins_home
 ENV JENKINS_SWARM_VERSION=3.4
-ENV DOCKER_VERSION=17.05.0-ce
-ENV DOCKER_COMPOSE_VERSION=1.14.0
+ENV DOCKER_VERSION=17.09.0-ce
+ENV DOCKER_COMPOSE_VERSION=1.16.1
 
 ARG user=jenkins
 ARG group=jenkins
@@ -24,7 +24,7 @@ RUN BIN_DIR=/usr/local/bin &&\
     chown -R ${user} ${JENKINS_SWARM_HOME} &&\
 
     # Docker
-    DOCKER_URL="https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" &&\
+    DOCKER_URL="https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz"
     curl -fsSL ${DOCKER_URL} | tar --strip-components=1 -xz -C ${BIN_DIR} &&\
 
     # Docker Compose
