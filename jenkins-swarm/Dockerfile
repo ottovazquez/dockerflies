@@ -24,7 +24,7 @@ RUN BIN_DIR=/usr/local/bin &&\
     chown -R ${user} ${JENKINS_SWARM_HOME} &&\
 
     # Docker
-    DOCKER_URL="https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz"
+    DOCKER_URL="https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" &&\
     curl -fsSL ${DOCKER_URL} | tar --strip-components=1 -xz -C ${BIN_DIR} &&\
 
     # Docker Compose
