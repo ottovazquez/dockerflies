@@ -34,6 +34,4 @@ RUN BIN_DIR=/usr/local/bin &&\
 
 WORKDIR ${JENKINS_SWARM_HOME}
 
-VOLUME /var/run/docker.sock
-
 CMD /bin/bash /cmd.sh

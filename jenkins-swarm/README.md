@@ -6,6 +6,7 @@ Run Jenkins [Swarm slaves](https://wiki.jenkins.io/display/JENKINS/Swarm+Plugin)
 To run a Docker container customizing the different tools with your credentials
 
     docker run \
+    -v /var/run/docker.sock:/var/run/docker.sock \
     -e JENKINS_USERNAME=jenkins \
     -e JENKINS_PASSWORD=jenkins \
     -e JENKINS_MASTER_URL=http://jenkins:8080 \
