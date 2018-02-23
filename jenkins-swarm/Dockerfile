@@ -32,7 +32,6 @@ RUN BIN_DIR=/usr/local/bin &&\
     curl -fsSLo ${BIN_DIR}/docker-compose ${DOCKER_COMPOSE_URL} &&\
     chmod +x ${BIN_DIR}/docker-compose
 
-USER ${user}
 WORKDIR ${JENKINS_SWARM_HOME}
 
 VOLUME /var/run/docker.sock
